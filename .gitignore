@@ -35,7 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
-#*.xml
-#*.properties
-#*.lock
-#*.bin
+*.xml
+*.properties
+*.lock
+*.bin
