@@ -18,7 +18,6 @@ import java.util.Map;
 public class ApiController {
 
 
-
   @PostMapping("/list")
   public ResponseEntity<List<Item>> testResponse(@RequestBody Map<String, String> request) {
     PublicApiDAO dao = new PublicApiDAO();

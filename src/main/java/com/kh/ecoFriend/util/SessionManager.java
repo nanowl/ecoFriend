@@ -63,11 +63,10 @@ public class SessionManager {
   }
 
   private Cookie findCookie(HttpServletRequest request, String cookieName) {
-    Cookie cookies = Arrays.stream(request.getCookies())
+    return Arrays.stream(request.getCookies())
       .filter(cookie -> cookie.getName().equals(cookieName))
       .findAny()
       .orElse(null);
-    return cookies;
   }
 
 }
