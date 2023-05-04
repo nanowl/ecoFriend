@@ -1,4 +1,4 @@
-package com.kh.ecoFriend.api;
+package com.kh.ecoFriend.dao;
 
 import com.kh.ecoFriend.api.entity.Item;
 import org.json.JSONArray;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PublicApiDAO {
+public class ApiDAO {
 
   //@Value("${public.key}")
   private final static String serviceKey = "GIO1tKfe1qPaC8jL2aiwEoaqw0BXwp/1lh3KQw4qRXysur1FXfXLpgMXjp9vfq2lIoM0Q4R1tP+dkbyYLTG4sg==" ;

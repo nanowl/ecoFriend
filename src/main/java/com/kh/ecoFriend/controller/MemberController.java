@@ -1,11 +1,17 @@
 package com.kh.ecoFriend.controller;
 
+import com.fasterxml.jackson.core.JsonToken;
 import com.kh.ecoFriend.dao.MemberDAO;
 import com.kh.ecoFriend.util.SessionManager;
 import com.kh.ecoFriend.vo.Member;
+import io.jsonwebtoken.Jwts;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -25,7 +32,10 @@ public class MemberController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
   private static final SessionManager sessionManager = new SessionManager();
 
+
+  //로그인
   @PostMapping("/login")
+  @ApiOperation(value = "로그인", notes = "로그인하면 해당 데이터 모델을 세션에 저장한다.")
   public ResponseEntity<Member> login(@RequestBody Map<String, String> request,
                                                    HttpServletResponse httpServletResponse) {
     MemberDAO dao = new MemberDAO();
@@ -44,7 +54,10 @@ public class MemberController {
     return new ResponseEntity<>(null, HttpStatus.OK);
   }
 
+
+  // 세션 조회
   @PostMapping("/session")
+  @ApiOperation(value = "세션조회", notes = "클라이언트가 보낸 세션의 아이디 값을 통해 세션 데이터를 조회한다.")
   public ResponseEntity<String> getSession(HttpServletRequest httpServletRequest) {
     Cookie[] cookies = httpServletRequest.getCookies();
     Arrays.asList(cookies).forEach(c -> LOGGER.info(c.getName() + ":" + c.getValue()));
@@ -52,8 +65,10 @@ public class MemberController {
     return new ResponseEntity<>(member.toString(), HttpStatus.OK);
   }
 
-  @PostMapping("/test")
-  public void Test(HttpServletRequest request) {
+  // 로그아웃
+  @PostMapping("/logout")
+  @ApiOperation(value = "로그아웃", notes = "세션을 삭제한다.")
+  public void logOut(HttpServletRequest request) {
     LOGGER.info("" + sessionManager.getSession(request));
     sessionManager.expire(request);
   }
