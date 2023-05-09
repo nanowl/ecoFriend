@@ -39,5 +39,3 @@ out/
 *.properties
 *.lock
 *.bin
-
-*.properties

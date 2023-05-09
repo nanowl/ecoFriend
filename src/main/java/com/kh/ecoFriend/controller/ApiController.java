@@ -20,12 +20,17 @@ import java.util.List;
 import java.util.Map;
 
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ApiController {
 
+  private final static ApiDAO apiDAO = new ApiDAO();
+  private final static MemberDAO memberDAO = new MemberDAO();
+  private final static SessionManager sessionManager = new SessionManager();
+  private final static RegisterMail confirm = new RegisterMail();
 
   @PostMapping("/list")
   @ApiOperation(value = "공공데이터 조회", notes = "전기차 충전소에 대한 각종 실시간 공공데이터를 받아온다.")
