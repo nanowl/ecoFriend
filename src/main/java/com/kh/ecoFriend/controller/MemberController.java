@@ -1,17 +1,12 @@
 package com.kh.ecoFriend.controller;
 
-import com.fasterxml.jackson.core.JsonToken;
 import com.kh.ecoFriend.dao.MemberDAO;
 import com.kh.ecoFriend.util.SessionManager;
 import com.kh.ecoFriend.vo.Member;
-import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.boot.json.BasicJsonParser;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +15,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -36,7 +30,7 @@ public class MemberController {
   //로그인
   @PostMapping("/login")
   @ApiOperation(value = "로그인", notes = "로그인하면 해당 데이터 모델을 세션에 저장한다.")
-  public ResponseEntity<Member> login(@RequestBody Map<String, String> request,
+  public ResponseEntity<Boolean> login(@RequestBody Map<String, String> request,
                                                    HttpServletResponse httpServletResponse) {
     MemberDAO dao = new MemberDAO();
     boolean isLogin = false;
@@ -48,10 +42,10 @@ public class MemberController {
     if (isLogin) {
       Member member = dao.getMemberData(request.get("email"));
       sessionManager.createSession(member, httpServletResponse);
-      return new ResponseEntity<>(member, HttpStatus.OK);
+//      return new ResponseEntity<>(, HttpStatus.OK);
     }
 
-    return new ResponseEntity<>(null, HttpStatus.OK);
+    return new ResponseEntity<>(isLogin, HttpStatus.OK);
   }
 
 
@@ -65,6 +59,14 @@ public class MemberController {
     return new ResponseEntity<>(member.toString(), HttpStatus.OK);
   }
 
+  // 포트포워딩 테스트
+  @GetMapping("/list")
+  @ApiOperation(value = "회원조회")
+  public String getMember(@RequestParam("email") String email) {
+    MemberDAO dao = new MemberDAO();
+    Member member = dao.getMemberData(email);
+    return member.toString();
+  }
   // 로그아웃
   @PostMapping("/logout")
   @ApiOperation(value = "로그아웃", notes = "세션을 삭제한다.")

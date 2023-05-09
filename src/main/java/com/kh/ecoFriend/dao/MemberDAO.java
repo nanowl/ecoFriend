@@ -14,7 +14,7 @@ public class MemberDAO {
   private ResultSet rs = null;
   private Statement stmt = null;
   private PreparedStatement pstmt = null;
-  private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MemberDAO.class);
 
   // 로그인 검증
   public boolean loginCheck(String id, String pwd) {
