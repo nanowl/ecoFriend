@@ -1,7 +1,6 @@
 # ecoFriend
-
-## build.gradle
 ___
+## build.gradle
 ### Email  
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
@@ -14,9 +13,8 @@ ___
 
 ### JWT    
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-## guide
 ___
+## guide
 ### _com/kh/ecoFriend/api/email/MailConfig.java_
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
