@@ -26,10 +26,6 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class ApiController {
 
-  private static final ApiDAO apiDAO = new ApiDAO();
-  private static final MemberDAO memberDAO = new MemberDAO();
-  private static final SessionManager sessionManager = new SessionManager();
-  private static final RegisterMail confirm = new RegisterMail();
 
   @PostMapping("/list")
   @ApiOperation(value = "공공데이터 조회", notes = "전기차 충전소에 대한 각종 실시간 공공데이터를 받아온다.")
