@@ -1,5 +1,6 @@
-package com.kh.ecoFriend.api;
+package com.kh.ecoFriend.dao;
 
+import com.kh.ecoFriend.api.config.email.RegisterMail;
 import com.kh.ecoFriend.api.entity.Item;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,26 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PublicApiDAO {
+public class ApiDAO {
 
   //@Value("${public.key}")
   private final static String serviceKey = "GIO1tKfe1qPaC8jL2aiwEoaqw0BXwp/1lh3KQw4qRXysur1FXfXLpgMXjp9vfq2lIoM0Q4R1tP+dkbyYLTG4sg==" ;
   private final static String ENDPOINT = "http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList";
-
-//  public ResponseEntity<String> get(String url) {
-//    RestTemplate restTemplate = new RestTemplate();
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//    HttpEntity<HttpHeaders> entity = new HttpEntity<>(headers);
-//
-//    ResponseEntity<String> response = restTemplate.exchange(
-//      URI.create(url), HttpMethod.GET, entity, String.class
-//    );
-//
-//    return response;
-//  }
-
+  private static RegisterMail registerMail = new RegisterMail();
 
   // 공공데이터를 가져옴
   public ResponseEntity<String> getData(Map<String, String> request) {
@@ -57,6 +44,7 @@ public class PublicApiDAO {
     return response;
   }
 
+  // json 객체 파싱
   public List<Item> getItem(ResponseEntity<String> jsonObject) {
     JSONObject object = new JSONObject(jsonObject.getBody());
     JSONObject response = (JSONObject) object.get("response");
@@ -84,5 +72,17 @@ public class PublicApiDAO {
       itemList.add(item);
     }
     return itemList;
+  }
+
+  // 키 값 비교
+  public boolean getConfirmKey(String email, String keyCode) {
+    boolean isConfirm = false;
+    String confirmKey = registerMail.getConKey(email);
+    System.out.println("서버에 저장된 키 값 : " + confirmKey);
+    System.out.println("서버에 입력된 키 값 : " + keyCode);
+    if (confirmKey.equals(keyCode)) {
+      isConfirm = true;
+    }
+    return isConfirm;
   }
 }
