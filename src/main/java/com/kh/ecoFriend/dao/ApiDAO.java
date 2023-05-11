@@ -51,7 +51,6 @@ public class ApiDAO {
     JSONObject body = (JSONObject)  response.get("body");
     JSONObject items = (JSONObject)  body.get("items");
     JSONArray jsonItem = (JSONArray) items.get("item");
-    System.out.println(response);
     List<Item> itemList = new ArrayList<>();
     for (int i = 0; i < jsonItem.length(); i++) {
       JSONObject array = (JSONObject) jsonItem.get(i);

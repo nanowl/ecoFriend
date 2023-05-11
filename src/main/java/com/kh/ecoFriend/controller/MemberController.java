@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -59,13 +60,15 @@ public class MemberController {
     return new ResponseEntity<>(member.toString(), HttpStatus.OK);
   }
 
-  // 포트포워딩 테스트
-  @GetMapping("/list")
-  @ApiOperation(value = "회원조회")
-  public String getMember(@RequestParam("email") String email) {
+  // 중복체크
+  @PostMapping("/check")
+  @ApiOperation(value = "이메일 중복체크")
+  public ResponseEntity<Boolean> getMember(@RequestBody Map<String, String> request) {
+    String email = request.get("email");
     MemberDAO dao = new MemberDAO();
-    Member member = dao.getMemberData(email);
-    return member.toString();
+    // 조회가 되면 false, 안 되면 true
+    boolean isCheck =  dao.getCheckEmail(email);
+    return new ResponseEntity<>(isCheck, HttpStatus.OK);
   }
   // 로그아웃
   @PostMapping("/logout")

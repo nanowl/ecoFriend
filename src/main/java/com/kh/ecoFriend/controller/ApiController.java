@@ -62,12 +62,12 @@ public class ApiController {
   // 이메일 인증
   @PostMapping("/emailConfirm")
   @ApiOperation(value = "이메일 인증 기능")
-  public String emailConfirm(@RequestBody Map<String, String> request) throws Exception {
+  public ResponseEntity<String> emailConfirm(@RequestBody Map<String, String> request) throws Exception {
     String email = request.get("email");
     System.out.println("conEmail : " + email);
     String code = confirm.sendSimpleMessage(email);
     System.out.println("인증코드 : " + code);
-    return code;
+    return new ResponseEntity<>(code, HttpStatus.OK);
   }
   @PostMapping("/keyTest")
   @ApiOperation(value = "저장된 키 확인")

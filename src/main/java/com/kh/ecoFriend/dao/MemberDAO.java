@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberDAO {
   private Connection conn = null;
@@ -117,5 +119,25 @@ public class MemberDAO {
       e.printStackTrace();
     }
     return member;
+  }
+  // 중복확인
+  public boolean getCheckEmail(String id) {
+    try {
+      conn = Common.getConnection();
+      String sql = "SELECT * FROM CUSTOMER WHERE CUSTEMAIL = ?";
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, id);
+      rs = pstmt.executeQuery();
+
+      while(rs.next()) { // 읽을 데이타가 있으면 true
+        return false;
+      }
+      Common.close(rs);
+      Common.close(pstmt);
+      Common.close(conn);
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    return true;
   }
 }

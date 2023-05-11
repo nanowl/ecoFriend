@@ -87,7 +87,6 @@ public class RegisterMail implements MailServiceInter {
           break;
       }
     }
-    System.out.println(key.toString());
     return key.toString();
   }
 
