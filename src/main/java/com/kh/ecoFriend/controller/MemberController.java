@@ -26,22 +26,21 @@ public class MemberController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
   private static final SessionManager sessionManager = new SessionManager();
-
+  private static final MemberDAO memberDAO = new MemberDAO();
 
   //로그인
   @PostMapping("/login")
   @ApiOperation(value = "로그인", notes = "로그인하면 해당 데이터 모델을 세션에 저장한다.")
   public ResponseEntity<Boolean> login(@RequestBody Map<String, String> request,
                                                    HttpServletResponse httpServletResponse) {
-    MemberDAO dao = new MemberDAO();
     boolean isLogin = false;
     //전달 값 확인
     LOGGER.info("request : " + request);
 
     // 로그인 여부 검증
-    isLogin = dao.loginCheck(request.get("email"), request.get("pwd"));
+    isLogin = memberDAO.loginCheck(request.get("email"), request.get("pwd"));
     if (isLogin) {
-      Member member = dao.getMemberData(request.get("email"));
+      Member member = memberDAO.getMemberData(request.get("email"));
       sessionManager.createSession(member, httpServletResponse);
 //      return new ResponseEntity<>(, HttpStatus.OK);
     }
@@ -61,13 +60,12 @@ public class MemberController {
   }
 
   // 중복체크
-  @PostMapping("/check")
+  @GetMapping("/check")
   @ApiOperation(value = "이메일 중복체크")
-  public ResponseEntity<Boolean> getMember(@RequestBody Map<String, String> request) {
-    String email = request.get("email");
-    MemberDAO dao = new MemberDAO();
+  public ResponseEntity<Boolean> getMember(@RequestParam(required = false) String email) {
+//    String email = request.get("email");
     // 조회가 되면 false, 안 되면 true
-    boolean isCheck =  dao.getCheckEmail(email);
+    boolean isCheck =  memberDAO.getCheckEmail(email);
     return new ResponseEntity<>(isCheck, HttpStatus.OK);
   }
   // 로그아웃
@@ -76,6 +74,13 @@ public class MemberController {
   public void logOut(HttpServletRequest request) {
     LOGGER.info("" + sessionManager.getSession(request));
     sessionManager.expire(request);
+  }
+
+  @GetMapping("/list")
+  @ApiOperation(value = "회원조회")
+  public ResponseEntity<Member> getMemberInfo(@RequestParam(required = false) String email) {
+    Member member = memberDAO.getMemberData(email);
+    return new ResponseEntity<>(member, HttpStatus.OK);
   }
 }
 

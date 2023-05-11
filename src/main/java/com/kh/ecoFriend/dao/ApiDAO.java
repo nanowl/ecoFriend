@@ -81,6 +81,7 @@ public class ApiDAO {
     System.out.println("서버에 입력된 키 값 : " + keyCode);
     if (confirmKey.equals(keyCode)) {
       isConfirm = true;
+      registerMail.deleteConKey(email);
     }
     return isConfirm;
   }

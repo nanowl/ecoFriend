@@ -60,20 +60,21 @@ public class ApiController {
     return new ResponseEntity<>(isLogin, HttpStatus.OK);
   }
   // 이메일 인증
-  @PostMapping("/emailConfirm")
+  @GetMapping("/key")
   @ApiOperation(value = "이메일 인증 기능")
-  public ResponseEntity<String> emailConfirm(@RequestBody Map<String, String> request) throws Exception {
-    String email = request.get("email");
+  public ResponseEntity<String> emailConfirm(@RequestParam(required = false) String email) throws Exception {
+//    String email = request.get("email");
     System.out.println("conEmail : " + email);
     String code = confirm.sendSimpleMessage(email);
     System.out.println("인증코드 : " + code);
     return new ResponseEntity<>(code, HttpStatus.OK);
   }
-  @PostMapping("/keyTest")
+  @GetMapping("/email/confirm")
   @ApiOperation(value = "저장된 키 확인")
-  public ResponseEntity<Boolean> beanTest(@RequestBody Map<String, String> request) {
-    String email = request.get("email");
-    String key = request.get("key");
+  public ResponseEntity<Boolean> beanTest(@RequestParam(required = false) String email,
+                                          @RequestParam(required = false) String key) {
+//    String email = request.get("email");
+//    String key = request.get("key");
 
     boolean isConfirm = apiDAO.getConfirmKey(email, key);
 

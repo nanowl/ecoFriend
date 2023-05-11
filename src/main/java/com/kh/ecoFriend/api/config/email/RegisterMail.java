@@ -29,6 +29,10 @@ public class RegisterMail implements MailServiceInter {
   public void setConKey(String email, String key) {
     confirmKey.put(email, key);
   }
+  public void deleteConKey(String email) {
+    confirmKey.remove(email);
+    System.out.println(email + "의 키 코드값이 삭제 되었습니다.");
+  }
 
   // 메일 내용 작성
   @Override
