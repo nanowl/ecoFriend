@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MemberDAO {
   private Connection conn = null;
@@ -20,6 +21,7 @@ public class MemberDAO {
 
   // 로그인 검증
   public boolean loginCheck(String id, String pwd) {
+    boolean isLogin = false;
     try {
       conn = Common.getConnection();
       String sql = "SELECT * FROM customer WHERE CUSTEMAIL = ?";
@@ -27,35 +29,28 @@ public class MemberDAO {
       pstmt.setString(1, id);
       rs = pstmt.executeQuery();
 
-//      JSONObject  jo  = new JSONObject();
-//      ResultSetMetaData rmd = rs.getMetaData();
-
-//      System.out.println(rmd.getColumnLabel(1));
-      while(rs.next()) { // 읽을 데이타가 있으면 true
+      while (rs.next()) { // 읽을 데이타가 있으면 true
         String sqlId = rs.getString("CUSTEMAIL"); // 쿼리문 수행 결과에서 ID값을 가져 옴
         String sqlPwd = rs.getString("CUSTPWD");
         System.out.println("ID : " + sqlId);
         System.out.println("PWD : " + sqlPwd);
 
-        if(id.equals(sqlId) && pwd.equals(sqlPwd)) {
-          Common.close(rs);
-          Common.close(pstmt);
-          Common.close(conn);
+        if (id.equals(sqlId) && pwd.equals(sqlPwd)) {
           System.out.println("로그인 성공!!");
-          return true;
+          isLogin = true;
         }
       }
       Common.close(rs);
       Common.close(pstmt);
       Common.close(conn);
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
-    System.out.println("로그인 실패!!");
-    return false;
+    return isLogin;
   }
   // 이메일 로그인 검증
-  public boolean googleLogin(String id, boolean verified) {
+  public boolean googleLogin(String id) {
+    boolean isLogin = false;
     try {
       conn = Common.getConnection();
       String sql = "SELECT * FROM customer WHERE CUSTEMAIL = ?";
@@ -63,32 +58,19 @@ public class MemberDAO {
       pstmt.setString(1, id);
       rs = pstmt.executeQuery();
 
-//      JSONObject  jo  = new JSONObject();
-//      ResultSetMetaData rmd = rs.getMetaData();
-
-//      System.out.println(rmd.getColumnLabel(1));
-      while(rs.next()) { // 읽을 데이타가 있으면 true
-        String sqlId = rs.getString("CUSTEMAIL"); // 쿼리문 수행 결과에서 ID값을 가져 옴
-        LOGGER.info("ID : " + sqlId);
-
-        if(verified) {
-          Common.close(rs);
-          Common.close(pstmt);
-          Common.close(conn);
-          LOGGER.info("로그인 성공!!");
-          return true;
-        }
+      while (rs.next()) { // 읽을 데이타가 있으면 true
+        LOGGER.info("로그인 성공!!");
+        isLogin = true;
       }
       Common.close(rs);
       Common.close(pstmt);
       Common.close(conn);
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     LOGGER.info("로그인 실패!!");
-    return false;
+    return isLogin;
   }
-
   // 로그인 후 응답할 객체정보
   public Member getMemberData(String id) {
     Member member = Member.builder().build();
@@ -99,7 +81,7 @@ public class MemberDAO {
       pstmt.setString(1, id);
       rs = pstmt.executeQuery();
 
-      while(rs.next()) { // 읽을 데이타가 있으면 true
+      while (rs.next()) { // 읽을 데이타가 있으면 true
         member.setCustEmail(rs.getString("CUSTEMAIL"));
         member.setCustPwd(rs.getString("CUSTPWD"));
         member.setCustNm(rs.getString("CUSTNM"));
@@ -115,7 +97,7 @@ public class MemberDAO {
       Common.close(rs);
       Common.close(pstmt);
       Common.close(conn);
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return member;
@@ -129,15 +111,42 @@ public class MemberDAO {
       pstmt.setString(1, id);
       rs = pstmt.executeQuery();
 
-      while(rs.next()) { // 읽을 데이타가 있으면 true
+      while (rs.next()) { // 읽을 데이타가 있으면 true
         return false;
       }
       Common.close(rs);
       Common.close(pstmt);
       Common.close(conn);
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return true;
+  }
+  // 회원가입
+  public boolean signUpUserData(Map<String, String> data) {
+    int result = 0;
+    String sql = "INSERT INTO customer(custEmail, custPwd, custNm, custGend, custPhone, custAddr, custJoinDate) " +
+            "VALUES(?, ?, ?, ?, ?, ?, SYSDATE)";
+    try {
+      conn = Common.getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, data.get("id"));
+      pstmt.setString(2, data.get("password"));
+      pstmt.setString(3, data.get("nm"));
+      pstmt.setString(4, data.get("gend"));
+      pstmt.setString(5, data.get("phoneNumber"));
+      pstmt.setString(6, data.get("addr"));
+      result = pstmt.executeUpdate();
+      System.out.println("회원 가입 DB 결과 확인 : " + result);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Common.close(pstmt);
+    Common.close(conn);
+
+    if(result == 1) return true;
+    else return false;
+
   }
 }

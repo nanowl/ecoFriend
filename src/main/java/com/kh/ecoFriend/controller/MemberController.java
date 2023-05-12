@@ -48,6 +48,15 @@ public class MemberController {
     return new ResponseEntity<>(isLogin, HttpStatus.OK);
   }
 
+  @PostMapping("/signup")
+  @ApiOperation(value = "회원가입")
+  public ResponseEntity<Boolean> signUp(@RequestBody Map<String, String> request) {
+    boolean isSignUp = false;
+    isSignUp = memberDAO.signUpUserData(request);
+    return new ResponseEntity<>(isSignUp, HttpStatus.OK );
+  }
+
+
 
   // 세션 조회
   @PostMapping("/session")

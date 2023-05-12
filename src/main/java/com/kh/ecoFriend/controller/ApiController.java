@@ -50,8 +50,8 @@ public class ApiController {
     JsonParser jsonParser = new BasicJsonParser();
     Map<String, Object> jsonArray = jsonParser.parseMap(payload);
     String id = jsonArray.get("email").toString();
-    boolean verified = (boolean) jsonArray.get("email_verified");
-    boolean isLogin = memberDAO.googleLogin(id, verified);
+//    boolean verified = (boolean) jsonArray.get("email_verified");
+    boolean isLogin = memberDAO.googleLogin(id);
 
     if (isLogin) {
       Member member = (Member) memberDAO.getMemberData(id);
