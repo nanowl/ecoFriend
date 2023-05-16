@@ -36,6 +36,7 @@ public class ApiController {
   @ApiOperation(value = "공공데이터 조회", notes = "전기차 충전소에 대한 각종 실시간 공공데이터를 받아온다.")
   public ResponseEntity<List<Item>> getApi(@RequestBody Map<String, String> request) {
     ResponseEntity<String> jsonData = apiDAO.getData(request);
+    System.out.println("api 정상처리");
     return new ResponseEntity<>(apiDAO.getItem(jsonData), HttpStatus.OK);
   }
 
