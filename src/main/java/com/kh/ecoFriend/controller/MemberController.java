@@ -31,21 +31,20 @@ public class MemberController {
   //로그인
   @PostMapping("/login")
   @ApiOperation(value = "로그인", notes = "로그인하면 해당 데이터 모델을 세션에 저장한다.")
-  public ResponseEntity<Boolean> login(@RequestBody Map<String, String> request,
-                                                   HttpServletResponse httpServletResponse) {
+  public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
     boolean isLogin = false;
     //전달 값 확인
     LOGGER.info("request : " + request);
-
+    String uuid = "";
     // 로그인 여부 검증
     isLogin = memberDAO.loginCheck(request.get("email"), request.get("pwd"));
     if (isLogin) {
       Member member = memberDAO.getMemberData(request.get("email"));
-      sessionManager.createSession(member, httpServletResponse);
+      uuid = sessionManager.createSession(member);
 //      return new ResponseEntity<>(, HttpStatus.OK);
     }
-
-    return new ResponseEntity<>(isLogin, HttpStatus.OK);
+    System.out.println(isLogin);
+    return new ResponseEntity<>(uuid, HttpStatus.OK);
   }
 
   @PostMapping("/signup")
@@ -59,13 +58,12 @@ public class MemberController {
 
 
   // 세션 조회
-  @GetMapping("/session")
+  @PostMapping("/session")
   @ApiOperation(value = "세션조회", notes = "클라이언트가 보낸 세션의 아이디 값을 통해 세션 데이터를 조회한다.")
-  public ResponseEntity<Member> getSession(HttpServletRequest httpServletRequest) {
-    Cookie[] cookies = httpServletRequest.getCookies();
-    Arrays.asList(cookies).forEach(c -> LOGGER.info(c.getName() + ":" + c.getValue()));
+  public ResponseEntity<Member> getSession(@RequestParam(required = false) String uuid) {
+//    Arrays.asList(cookies).forEach(c -> LOGGER.info(c.getName() + ":" + c.getValue()));
     Member member = null;
-    member = (Member) sessionManager.getSession(httpServletRequest);
+    member = (Member) sessionManager.getSession(uuid);
     return new ResponseEntity<>(member, HttpStatus.OK);
   }
 
@@ -81,9 +79,9 @@ public class MemberController {
   // 로그아웃
   @PostMapping("/logout")
   @ApiOperation(value = "로그아웃", notes = "세션을 삭제한다.")
-  public void logOut(HttpServletRequest request) {
-    LOGGER.info("" + sessionManager.getSession(request));
-    sessionManager.expire(request);
+  public void logOut(@RequestParam(required = false) String uuid) {
+    LOGGER.info("" + sessionManager.getSession(uuid));
+    sessionManager.expire(uuid);
   }
 
   @GetMapping("/list")

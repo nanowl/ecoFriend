@@ -16,14 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class SessionManager {
-  private static final String SESSION_COOKIE_NAME = "mySessionId";
   private Map<String, Member> sessionStore = new ConcurrentHashMap<>();
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
 
   /**
    * 세션 생성
    */
-  public void createSession(Member value, HttpServletResponse response){
+  public String createSession(Member value){
 
     LOGGER.info("memberInfo : " + value.toString());
     // 세션 id를 생성하고, 값을 세션에 저장
@@ -33,40 +32,31 @@ public class SessionManager {
     LOGGER.info("session : " + sessionStore.keySet());
     LOGGER.info("session : " + sessionStore.size());
     // 쿠키 생성
-    Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
-    response.addCookie(mySessionCookie);
+    return sessionId;
   }
 
   /**
    * 세션 조회
    */
-  public Member getSession(HttpServletRequest request){
-
-    Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
-    if (sessionCookie == null){
-      LOGGER.info("session is not found");
-      return null;
-    }
-    LOGGER.info("session Cookie : " + sessionCookie.getValue());
-    LOGGER.info("session size() : " + sessionStore.size());
-    return sessionStore.get(sessionCookie.getValue());
+  public Member getSession(String uuid){
+    LOGGER.info("uuid : " + uuid);
+    return sessionStore.get(uuid);
   }
 
   /**
    * 세션 만료
    */
-  public void expire(HttpServletRequest request){
-    Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
-    if (sessionCookie != null){
-      sessionStore.remove(sessionCookie.getValue());
-    }
+  public void expire(String uuid){
+    Member member = getSession(uuid);
+    LOGGER.info("삭제할 session : " + member.getCustEmail());
+    sessionStore.remove(uuid);
   }
 
-  private Cookie findCookie(HttpServletRequest request, String cookieName) {
-    return Arrays.stream(request.getCookies())
-      .filter(cookie -> cookie.getName().equals(cookieName))
-      .findAny()
-      .orElse(null);
-  }
+//  private Cookie findCookie(HttpServletRequest request, String cookieName) {
+//    return Arrays.stream(request.getCookies())
+//      .filter(cookie -> cookie.getName().equals(cookieName))
+//      .findAny()
+//      .orElse(null);
+//  }
 
 }

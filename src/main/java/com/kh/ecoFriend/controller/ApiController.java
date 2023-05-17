@@ -43,7 +43,7 @@ public class ApiController {
   // 구글 로그인
   @PostMapping("/googleLogin")
   @ApiOperation(value = "구글 로그인 기능", notes = "리액트에서 구글 로그인을 시도하면 보내오는 jwt 데이터의 payLoad부분을 파싱하여 사용자 정보를 읽어온다.")
-  public ResponseEntity<Boolean> emailLogin(@RequestBody String jwt, HttpServletResponse response) {
+  public ResponseEntity<Boolean> emailLogin(@RequestBody String jwt) {
     final String payloadJWT = jwt.split("\\.")[1];
     Base64.Decoder decoder = Base64.getUrlDecoder();
 
@@ -56,7 +56,7 @@ public class ApiController {
 
     if (isLogin) {
       Member member = (Member) memberDAO.getMemberData(id);
-      sessionManager.createSession(member, response);
+      sessionManager.createSession(member);
     }
     return new ResponseEntity<>(isLogin, HttpStatus.OK);
   }
