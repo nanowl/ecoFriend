@@ -58,7 +58,7 @@ public class MemberController {
 
 
   // 세션 조회
-  @PostMapping("/session")
+  @GetMapping("/session")
   @ApiOperation(value = "세션조회", notes = "클라이언트가 보낸 세션의 아이디 값을 통해 세션 데이터를 조회한다.")
   public ResponseEntity<Member> getSession(@RequestParam(required = false) String uuid) {
 //    Arrays.asList(cookies).forEach(c -> LOGGER.info(c.getName() + ":" + c.getValue()));
