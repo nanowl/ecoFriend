@@ -11,6 +11,4 @@ public class Charger {
   private String cpNm;
   private int cpTp;
   private int chargeTp;
-  private int cpStat;
-  private String statUpDateTime;
 }
