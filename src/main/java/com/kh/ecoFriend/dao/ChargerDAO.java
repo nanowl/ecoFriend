@@ -98,39 +98,40 @@ public class ChargerDAO {
 
   // 관심충전소 등록
   public boolean setWishStation(Map<String, String> data) {
-    boolean result = false;
+    int result = 0;
     String sql = "INSERT INTO WISHSTATION VALUES (?, ?)";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, data.get("email"));
       pstmt.setInt(2, Integer.parseInt(data.get("csId")));
-      rs = pstmt.executeQuery();
-      if (rs.next()) result = true;
-      else result = false;
+      result = pstmt.executeUpdate();
       conn.close();
       pstmt.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return result;
+    if (result == 1) return true;
+    else return false;
   }
 
   // 관심충전소 삭제
   public boolean deleteWishStation(Map<String, String> data) {
-    boolean result = false;
+    int result = 0;
     String sql = "DELETE FROM WISHSTATION WHERE CUSTEMAIL = ? AND CSID = ?";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, data.get("email"));
       pstmt.setInt(2, Integer.parseInt(data.get("csId")));
-      pstmt.executeUpdate();
+      result = pstmt.executeUpdate();
+
     } catch (Exception e) {
       e.printStackTrace();
     }
     Common.close(pstmt);
     Common.close(conn);
-    return result;
+    if (result == 1) return true;
+    else return false;
   }
 }
