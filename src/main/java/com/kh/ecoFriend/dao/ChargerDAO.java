@@ -71,9 +71,10 @@ public class ChargerDAO {
     return isResult;
   }
   // 관심충전소 호출
-  public WishStation getWishStation(String email) {
+  public List<WishStation> getWishStation(String email) {
     String sql = "select * from WISHSTATION where CUSTEMAIL = ?";
     WishStation wishStation = null;
+    List<WishStation> list = new ArrayList<>();
     try {
        conn = Common.getConnection();
        pstmt = conn.prepareStatement(sql);
@@ -84,6 +85,7 @@ public class ChargerDAO {
                  .email(rs.getString("CUSTEMAIL"))
                  .csId(rs.getInt("CSID"))
                  .build();
+         list.add(wishStation);
        }
        conn.close();
        pstmt.close();
@@ -91,7 +93,7 @@ public class ChargerDAO {
     }catch (Exception e) {
       e.printStackTrace();
     }
-    return wishStation;
+    return list;
   }
 
   // 관심충전소 등록
@@ -117,7 +119,7 @@ public class ChargerDAO {
   // 관심충전소 삭제
   public boolean deleteWishStation(Map<String, String> data) {
     boolean result = false;
-    String sql = "DELETE FROM WISHSTATION WHERE CUSTEMAIL = ? AND ";
+    String sql = "DELETE FROM WISHSTATION WHERE CUSTEMAIL = ? AND CSID = ?";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);

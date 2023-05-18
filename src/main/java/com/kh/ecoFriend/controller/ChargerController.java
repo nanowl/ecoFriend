@@ -46,8 +46,8 @@ public class ChargerController {
 
   @GetMapping("/wish/find")
   @ApiOperation(value = "관심충전소 호출")
-  public ResponseEntity<WishStation> findMyWish(@RequestParam(required = false) String email) {
-    WishStation wishStation = chargerDAO.getWishStation(email);
+  public ResponseEntity<List<WishStation>> findMyWish(@RequestParam(required = false) String email) {
+    List<WishStation> wishStation = chargerDAO.getWishStation(email);
     return new ResponseEntity<>(wishStation, HttpStatus.OK);
   }
 
@@ -59,4 +59,11 @@ public class ChargerController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+  @DeleteMapping("/wish/delete")
+  @ApiOperation(value = "관심충전소 제거")
+  public ResponseEntity<Boolean> deleteMyWish(@RequestBody Map<String, String> data) {
+    boolean result = false;
+    result = chargerDAO.deleteWishStation(data);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 }
