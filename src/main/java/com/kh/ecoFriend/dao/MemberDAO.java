@@ -147,6 +147,5 @@ public class MemberDAO {
 
     if(result == 1) return true;
     else return false;
-
   }
 }
