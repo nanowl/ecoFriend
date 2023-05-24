@@ -77,7 +77,9 @@ public class MemberController {
     return new ResponseEntity<>(isCheck, HttpStatus.OK);
   }
   // 로그아웃
-  @PostMapping("/logout")
+//  @PostMapping("/logout")
+  @DeleteMapping("/logout")
+  @CrossOrigin(origins = "*")
   @ApiOperation(value = "로그아웃", notes = "세션을 삭제한다.")
   public void logOut(@RequestParam(required = false) String uuid) {
     LOGGER.info("" + sessionManager.getSession(uuid));
