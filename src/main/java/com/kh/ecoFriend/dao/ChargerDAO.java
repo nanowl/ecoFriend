@@ -43,8 +43,7 @@ public class ChargerDAO {
     }
     return isResult;
   }
-  public boolean setCharStationDB(List<Item> itemList) {
-    boolean isResult = false;
+  public void setCharStationDB(List<Item> itemList) {
     try {
       conn = Common.getConnection();
       String sql = "INSERT INTO CHARGINGSTATION(CSID, CSNM, ADDR, LNG, LAT) " +
@@ -57,18 +56,13 @@ public class ChargerDAO {
         pstmt.setString(3, item.addr);
         pstmt.setDouble(4, item.lng);
         pstmt.setDouble(5, item.lat);
-        rs = pstmt.executeQuery();
-        if (rs.next()) isResult = true;
-        else isResult = false;
+        pstmt.executeUpdate();
       }
       conn.close();
       pstmt.close();
-      rs.close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
-    return isResult;
   }
   // 관심충전소 호출
   public List<WishStation> getWishStation(String email) {
@@ -131,6 +125,7 @@ public class ChargerDAO {
     }
     Common.close(pstmt);
     Common.close(conn);
+    System.out.println(result);
     if (result == 1) return true;
     else return false;
   }

@@ -38,10 +38,8 @@ public class ChargerController {
   public ResponseEntity<Boolean> addCharStationData(@RequestBody Map<String, String> data) {
     ResponseEntity<String> jsonData = apiDAO.getData(data);
     List<Item> list = apiDAO.getItem(jsonData);
-    boolean charStation = chargerDAO.setCharStationDB(list);
-    boolean isResult = false;
-    if (charStation) isResult = true;
-    return new ResponseEntity<>(isResult, HttpStatus.OK);
+    chargerDAO.setCharStationDB(list);
+    return new ResponseEntity<>(true, HttpStatus.OK);
   }
 
   @GetMapping("/wish/find")
@@ -62,6 +60,7 @@ public class ChargerController {
   @DeleteMapping("/wish/delete")
   @ApiOperation(value = "관심충전소 제거")
   public ResponseEntity<Boolean> deleteMyWish(@RequestBody Map<String, String> data) {
+    System.out.println(data.get("csId"));
     boolean result = false;
     result = chargerDAO.deleteWishStation(data);
     return new ResponseEntity<>(result, HttpStatus.OK);
