@@ -32,7 +32,6 @@ public class PaymentDAO {
             pstmt.setString(5, endDate);
             pstmt.setString(6, cvc);
             pstmt.setString(7, price);
-            result = pstmt.executeUpdate();
             System.out.println("회원 가입 DB 결과 확인 : " + result);
 
             result = pstmt.executeUpdate();
