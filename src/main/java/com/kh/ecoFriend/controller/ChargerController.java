@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +40,20 @@ public class ChargerController {
   public ResponseEntity<Boolean> addCharStationData(@RequestBody Map<String, String> data) {
     ResponseEntity<String> jsonData = apiDAO.getData(data);
     List<Item> list = apiDAO.getItem(jsonData);
-    boolean charStation = chargerDAO.setCharStationDB(list);
-    boolean isResult = false;
-    if (charStation) isResult = true;
-    return new ResponseEntity<>(isResult, HttpStatus.OK);
+    chargerDAO.setCharStationDB(list);
+    return new ResponseEntity<>(true, HttpStatus.OK);
   }
+
+
+  @GetMapping("/wish/findAll")
+  @ApiOperation(value = "관심충전소 모두호출")
+  public ResponseEntity<List<Map<String, Object>>> getWishStations(@RequestParam("email") String email) {
+    Map<String, String> map = new HashMap<>();
+    map.put("email", email);
+    List<Map<String, Object>> wishStations = chargerDAO.getWishStations(email);
+    return new ResponseEntity<>(wishStations, HttpStatus.OK);
+  }
+
 
   @GetMapping("/wish/find")
   @ApiOperation(value = "관심충전소 호출")
@@ -54,14 +65,14 @@ public class ChargerController {
   @PostMapping("/wish/add")
   @ApiOperation(value = "관심충전소 등록")
   public ResponseEntity<Boolean> addMyWish(@RequestBody Map<String, String> data) {
-    boolean result = false;
-    result = chargerDAO.setWishStation(data);
+    boolean result = chargerDAO.setWishStation(data);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   @DeleteMapping("/wish/delete")
   @ApiOperation(value = "관심충전소 제거")
   public ResponseEntity<Boolean> deleteMyWish(@RequestBody Map<String, String> data) {
+    System.out.println(data.get("csId"));
     boolean result = false;
     result = chargerDAO.deleteWishStation(data);
     return new ResponseEntity<>(result, HttpStatus.OK);

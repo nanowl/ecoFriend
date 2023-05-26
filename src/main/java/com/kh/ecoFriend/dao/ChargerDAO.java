@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +44,7 @@ public class ChargerDAO {
     }
     return isResult;
   }
-  public boolean setCharStationDB(List<Item> itemList) {
-    boolean isResult = false;
+  public void setCharStationDB(List<Item> itemList) {
     try {
       conn = Common.getConnection();
       String sql = "INSERT INTO CHARGINGSTATION(CSID, CSNM, ADDR, LNG, LAT) " +
@@ -57,18 +57,13 @@ public class ChargerDAO {
         pstmt.setString(3, item.addr);
         pstmt.setDouble(4, item.lng);
         pstmt.setDouble(5, item.lat);
-        rs = pstmt.executeQuery();
-        if (rs.next()) isResult = true;
-        else isResult = false;
+        pstmt.executeUpdate();
       }
       conn.close();
       pstmt.close();
-      rs.close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
-    return isResult;
   }
   // 관심충전소 호출
   public List<WishStation> getWishStation(String email) {
@@ -82,7 +77,7 @@ public class ChargerDAO {
        rs = pstmt.executeQuery();
        while (rs.next()) {
          wishStation = WishStation.builder()
-                 .email(rs.getString("CUSTEMAIL"))
+                 .custEmail(rs.getString("CUSTEMAIL"))
                  .csId(rs.getInt("CSID"))
                  .build();
          list.add(wishStation);
@@ -99,21 +94,54 @@ public class ChargerDAO {
   // 관심충전소 등록
   public boolean setWishStation(Map<String, String> data) {
     int result = 0;
-    String sql = "INSERT INTO WISHSTATION VALUES (?, ?)";
+    String sql = "INSERT INTO WISHSTATION (CUSTEMAIL, CSID, ADDR, CHARGETP, CPSTAT, CSNM) VALUES (?, ?, ?, ?, ?, ?)";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, data.get("email"));
+      pstmt.setString(1, data.get("custEmail"));
       pstmt.setInt(2, Integer.parseInt(data.get("csId")));
+      pstmt.setString(3, data.get("addr"));
+      pstmt.setString(4, data.get("chargeTp"));
+      pstmt.setString(5, data.get("cpStat"));
+      pstmt.setString(6, data.get("csNm"));
       result = pstmt.executeUpdate();
       conn.close();
       pstmt.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
-    if (result == 1) return true;
-    else return false;
+    return result == 1;
   }
+// 관심충전소 조회
+public List<Map<String, Object>> getWishStations(String email) {
+  List<Map<String, Object>> wishStations = new ArrayList<>();
+  String sql = "SELECT * FROM WISHSTATION WHERE CUSTEMAIL = ?";
+
+  try {
+    conn = Common.getConnection();
+    pstmt = conn.prepareStatement(sql);
+    pstmt.setString(1, email); // changed this line
+    ResultSet rs = pstmt.executeQuery();
+    while (rs.next()) {
+      Map<String, Object> wishStation = new HashMap<>();
+      wishStation.put("custEmail", rs.getString("CUSTEMAIL"));
+      wishStation.put("csId", rs.getInt("CSID"));
+      wishStation.put("addr", rs.getString("ADDR"));
+      wishStation.put("chargeTp", rs.getString("CHARGETP"));
+      wishStation.put("cpStat", rs.getString("CPSTAT"));
+      wishStation.put("csNm", rs.getString("CSNM"));
+      wishStations.add(wishStation);
+    }
+    conn.close();
+    pstmt.close();
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+  return wishStations;
+}
+
+
+
 
   // 관심충전소 삭제
   public boolean deleteWishStation(Map<String, String> data) {
@@ -131,6 +159,7 @@ public class ChargerDAO {
     }
     Common.close(pstmt);
     Common.close(conn);
+    System.out.println(result);
     if (result == 1) return true;
     else return false;
   }

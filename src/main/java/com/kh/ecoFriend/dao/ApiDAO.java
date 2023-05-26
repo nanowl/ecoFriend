@@ -3,6 +3,7 @@ package com.kh.ecoFriend.dao;
 import com.kh.ecoFriend.api.config.email.RegisterMail;
 import com.kh.ecoFriend.api.entity.Item;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class ApiDAO {
 
   //@Value("${public.key}")
-  private final static String serviceKey = "GIO1tKfe1qPaC8jL2aiwEoaqw0BXwp/1lh3KQw4qRXysur1FXfXLpgMXjp9vfq2lIoM0Q4R1tP+dkbyYLTG4sg==" ;
+  private final static String serviceKey = "JF8AcB8IEJi0h4O+hefnYvhn0VRJMtVfQDjmhKOih2v8ciOGRD4Ksj4uY0RmiyWulA0s4nj/CoNPZ2PVo0MUPA==" ;
   private final static String ENDPOINT = "http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList";
   private static RegisterMail registerMail = new RegisterMail();
 
@@ -42,10 +43,12 @@ public class ApiDAO {
       URI.create(ENDPOINT + "?" + URL.toString()), HttpMethod.GET, entity, String.class
     );
 
+    System.out.println("Response: " + response.getBody());
+
     return response;
   }
 
-  // json 객체 파싱
+ //  json 객체 파싱
   public List<Item> getItem(ResponseEntity<String> jsonObject) {
     JSONObject object = new JSONObject(jsonObject.getBody());
     JSONObject response = (JSONObject) object.get("response");
@@ -71,9 +74,12 @@ public class ApiDAO {
         .build();
       itemList.add(item);
     }
+    System.out.println("itemList: " + itemList);
     return itemList;
   }
 
+  
+  
   // 키 값 비교
   public boolean getConfirmKey(String email, String keyCode) {
     boolean isConfirm = false;

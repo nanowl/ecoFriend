@@ -77,7 +77,9 @@ public class MemberController {
     return new ResponseEntity<>(isCheck, HttpStatus.OK);
   }
   // 로그아웃
-  @PostMapping("/logout")
+//  @PostMapping("/logout")
+  @DeleteMapping("/logout")
+  @CrossOrigin(origins = "*")
   @ApiOperation(value = "로그아웃", notes = "세션을 삭제한다.")
   public void logOut(@RequestParam(required = false) String uuid) {
     LOGGER.info("" + sessionManager.getSession(uuid));
@@ -89,6 +91,21 @@ public class MemberController {
   public ResponseEntity<Member> getMemberInfo(@RequestParam(required = false) String email) {
     Member member = memberDAO.getMemberData(email);
     return new ResponseEntity<>(member, HttpStatus.OK);
+  }
+
+  //  비밀번호 변경
+  @PostMapping("/updatePassword")
+  public ResponseEntity<Void> updatePassword(@RequestBody Map<String, String> credentials) {
+    String email = credentials.get("email");
+    String newPwd = credentials.get("newPwd");
+
+    int updated = memberDAO.updatePassword(email, newPwd);
+
+    if (updated > 0) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 }
 
