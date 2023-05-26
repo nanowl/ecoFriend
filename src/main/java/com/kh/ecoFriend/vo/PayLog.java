@@ -8,7 +8,7 @@ import lombok.Data;
 public class PayLog {
   private int payNo;
   private String email;
-  private int chargeTp;
   private int chargeAmount;
-  private int payment;
+  private int price;
+  private String payDate;
 }

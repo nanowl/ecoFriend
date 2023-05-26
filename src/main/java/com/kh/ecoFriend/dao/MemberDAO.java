@@ -1,5 +1,6 @@
 package com.kh.ecoFriend.dao;
 
+import com.kh.ecoFriend.api.entity.SignUpReq;
 import com.kh.ecoFriend.controller.MemberController;
 import com.kh.ecoFriend.util.Common;
 import com.kh.ecoFriend.vo.Member;
@@ -123,19 +124,19 @@ public class MemberDAO {
     return true;
   }
   // 회원가입
-  public boolean signUpUserData(Map<String, String> data) {
+  public boolean signUpUserData(SignUpReq data) {
     int result = 0;
     String sql = "INSERT INTO customer(custEmail, custPwd, custNm, custGend, custPhone, custAddr, custJoinDate) " +
             "VALUES(?, ?, ?, ?, ?, ?, SYSDATE)";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, data.get("id"));
-      pstmt.setString(2, data.get("password"));
-      pstmt.setString(3, data.get("nm"));
-      pstmt.setString(4, data.get("gend"));
-      pstmt.setString(5, data.get("phoneNumber"));
-      pstmt.setString(6, data.get("addr"));
+      pstmt.setString(1, data.getId());
+      pstmt.setString(2, data.getPassword());
+      pstmt.setString(3, data.getNm());
+      pstmt.setString(4, data.getGend());
+      pstmt.setString(5, data.getPhoneNumber());
+      pstmt.setString(6, data.getAddr());
       result = pstmt.executeUpdate();
       System.out.println("회원 가입 DB 결과 확인 : " + result);
 

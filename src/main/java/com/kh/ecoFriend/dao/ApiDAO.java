@@ -2,6 +2,7 @@ package com.kh.ecoFriend.dao;
 
 import com.kh.ecoFriend.api.config.email.RegisterMail;
 import com.kh.ecoFriend.api.entity.Item;
+import com.kh.ecoFriend.api.entity.PublicReq;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.*;
@@ -22,10 +23,10 @@ public class ApiDAO {
   private static RegisterMail registerMail = new RegisterMail();
 
   // 공공데이터를 가져옴
-  public ResponseEntity<String> getData(Map<String, String> request) {
-    String pageNum = request.get("pageNum");
-    String numOfRows = request.get("numOfRows");
-    String addr = request.get("addr");
+  public ResponseEntity<String> getData(PublicReq request) {
+    int pageNum = request.getPageNum();
+    int numOfRows = request.getNumOfRows();
+    String addr = request.getAddr();
 
     StringBuilder URL = new StringBuilder("serviceKey=" + URLEncoder.encode(serviceKey));
     URL.append("&pageNum=" + pageNum)

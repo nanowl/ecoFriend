@@ -1,6 +1,7 @@
 package com.kh.ecoFriend.dao;
 
 import com.kh.ecoFriend.api.entity.Item;
+import com.kh.ecoFriend.api.entity.WistStReq;
 import com.kh.ecoFriend.util.Common;
 import com.kh.ecoFriend.vo.Charger;
 import com.kh.ecoFriend.vo.WishStation;
@@ -97,14 +98,14 @@ public class ChargerDAO {
   }
 
   // 관심충전소 등록
-  public boolean setWishStation(Map<String, String> data) {
+  public boolean setWishStation(WistStReq data) {
     int result = 0;
     String sql = "INSERT INTO WISHSTATION VALUES (?, ?)";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, data.get("email"));
-      pstmt.setInt(2, Integer.parseInt(data.get("csId")));
+      pstmt.setString(1, data.getEmail());
+      pstmt.setInt(2, data.getCsId());
       result = pstmt.executeUpdate();
       conn.close();
       pstmt.close();
@@ -116,14 +117,14 @@ public class ChargerDAO {
   }
 
   // 관심충전소 삭제
-  public boolean deleteWishStation(Map<String, String> data) {
+  public boolean deleteWishStation(WistStReq data) {
     int result = 0;
     String sql = "DELETE FROM WISHSTATION WHERE CUSTEMAIL = ? AND CSID = ?";
     try {
       conn = Common.getConnection();
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, data.get("email"));
-      pstmt.setInt(2, Integer.parseInt(data.get("csId")));
+      pstmt.setString(1, data.getEmail());
+      pstmt.setInt(2, data.getCsId());
       result = pstmt.executeUpdate();
 
     } catch (Exception e) {
