@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class PayKind {
-  private int cvc;
+  private int bankNo;
   private String email;
-  private String name;
-  private String cardNo;
+  private String bankNm;
+  private int bankId;
 }

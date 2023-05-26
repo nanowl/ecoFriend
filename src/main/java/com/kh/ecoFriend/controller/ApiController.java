@@ -2,7 +2,6 @@ package com.kh.ecoFriend.controller;
 
 import com.kh.ecoFriend.api.config.email.RegisterMail;
 import com.kh.ecoFriend.api.entity.Item;
-import com.kh.ecoFriend.api.entity.PublicReq;
 import com.kh.ecoFriend.dao.ApiDAO;
 import com.kh.ecoFriend.dao.MemberDAO;
 import com.kh.ecoFriend.util.SessionManager;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class ApiController {
 
   @PostMapping("/list")
   @ApiOperation(value = "공공데이터 조회", notes = "전기차 충전소에 대한 각종 실시간 공공데이터를 받아온다.")
-  public ResponseEntity<List<Item>> getApi(@RequestBody PublicReq request) {
+  public ResponseEntity<List<Item>> getApi(@RequestBody Map<String, String> request) {
     ResponseEntity<String> jsonData = apiDAO.getData(request);
     System.out.println("api 정상처리");
     return new ResponseEntity<>(apiDAO.getItem(jsonData), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class ApiController {
   // 이메일 인증
   @GetMapping("/key")
   @ApiOperation(value = "이메일 인증 기능")
-  public ResponseEntity<String> emailConfirm(@RequestParam String email) throws Exception {
+  public ResponseEntity<String> emailConfirm(@RequestParam(required = false) String email) throws Exception {
 //    String email = request.get("email");
     System.out.println("conEmail : " + email);
     String code = confirm.sendSimpleMessage(email);
@@ -72,8 +72,8 @@ public class ApiController {
   }
   @GetMapping("/email/confirm")
   @ApiOperation(value = "저장된 키 확인")
-  public ResponseEntity<Boolean> beanTest(@RequestParam String email,
-                                          @RequestParam String key) {
+  public ResponseEntity<Boolean> beanTest(@RequestParam(required = false) String email,
+                                          @RequestParam(required = false) String key) {
 //    String email = request.get("email");
 //    String key = request.get("key");
 
