@@ -62,6 +62,9 @@ public class InquireController {
     @GetMapping("/unanswered")
     public ResponseEntity<List<Inquire>> getUnansweredInquiries() {
         List<Inquire> inquiries = inquireDAO.getUnansweredInquiries();
+        for (Inquire e : inquiries) {
+            System.out.println(e.toString());
+        }
         return new ResponseEntity<>(inquiries, HttpStatus.OK);
     }
 

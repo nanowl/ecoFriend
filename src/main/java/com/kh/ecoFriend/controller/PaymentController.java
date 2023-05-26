@@ -41,6 +41,7 @@ public class PaymentController {
     @GetMapping("/user/{email}/charge")
     public ResponseEntity<Integer> getChargeMoney(@PathVariable String email) {
         int total = paymentDAO.getChargeMoney(email);
+        System.out.println(email);
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
 

@@ -92,6 +92,21 @@ public class MemberController {
     Member member = memberDAO.getMemberData(email);
     return new ResponseEntity<>(member, HttpStatus.OK);
   }
+
+  //  비밀번호 변경
+  @PostMapping("/updatePassword")
+  public ResponseEntity<Void> updatePassword(@RequestBody Map<String, String> credentials) {
+    String email = credentials.get("email");
+    String newPwd = credentials.get("newPwd");
+
+    int updated = memberDAO.updatePassword(email, newPwd);
+
+    if (updated > 0) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  }
 }
 
 

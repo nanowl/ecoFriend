@@ -149,4 +149,33 @@ public class MemberDAO {
     else return false;
 
   }
+
+  // 비밀번호 변겅
+
+  public int updatePassword(String email, String newPwd) {
+    String sql = "UPDATE CUSTOMER SET CUSTPWD = ? WHERE CUSTEMAIL = ?";
+    int affectedRows = 0;
+
+    try {
+      conn = Common.getConnection();
+      pstmt = conn.prepareStatement(sql);
+      pstmt.setString(1, newPwd);
+      pstmt.setString(2, email);
+
+      affectedRows = pstmt.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (pstmt != null) pstmt.close();
+        if (conn != null) conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return affectedRows;
+  }
+
+  // ...
 }
