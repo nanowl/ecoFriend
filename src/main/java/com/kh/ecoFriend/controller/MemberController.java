@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://192.168.110.68:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")

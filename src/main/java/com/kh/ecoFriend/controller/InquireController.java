@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+@CrossOrigin(origins = "http://192.168.110.68:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping("/inquires")
 public class InquireController {
